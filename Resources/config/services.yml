@@ -28,9 +28,16 @@ services:
             $arrayBuilder: '@ltree_bundle.treebuilder.treebuilderfromarrayresult'
             $objectBuilder: '@ltree_bundle.treebuilder.treebuilderfromobjectresult'
 
+#    ltree_bundle.repository_factory:
+#        class: 'LTree\Repository\RepositoryFactory'
+#        arguments:
+#            $annotationDriver: '@ltree_bundle.annotation.annotation_driver'
+#            $propertyAccessor: '@property_accessor'
+#            $treeBuilder: '@ltree_bundle.treebuilder.treebuilder'
     ltree_bundle.repository_factory:
-        class: 'LTree\Repository\RepositoryFactory'
+        class: 'LTree\Repository\ContainerRepositoryFactory'
         arguments:
+            $container: '@service_container'
             $annotationDriver: '@ltree_bundle.annotation.annotation_driver'
             $propertyAccessor: '@property_accessor'
             $treeBuilder: '@ltree_bundle.treebuilder.treebuilder'
