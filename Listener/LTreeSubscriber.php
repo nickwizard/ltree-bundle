@@ -56,6 +56,8 @@ class LTreeSubscriber implements EventSubscriber
         $identifiers = $classMetadata->getIdentifierValues($entity);
         $idValue = reset($identifiers);
 
+        $pathIsString = false;
+
         if (!$idValue) {
             throw new LogicException('Can\'t build path property without id');
         }
@@ -70,12 +72,26 @@ class LTreeSubscriber implements EventSubscriber
                 throw new ErrorException('Unable to build parent path property');
             }
         }
+        if (is_string($pathValue)) {
+            $pathIsString = true;
+            $pathValue = explode('.', $pathValue);
+        }
         if (!is_array($pathValue)) {
             $this->buildPath($parent, $classMetadata);
             $pathValue = $this->propertyAccessor->getValue($parent, $pathName);
+            if (is_string($pathValue)) {
+                $pathIsString = true;
+                $pathValue = explode('.', $pathValue);
+            }
         }
         $pathValue[] = $idValue;
-        $this->propertyAccessor->setValue($entity, $pathName, $pathValue);
+        $this->propertyAccessor->setValue(
+            $entity,
+            $pathName,
+            $pathIsString
+                ? implode('.', $pathValue)
+                : $pathValue
+        );
     }
 
     /**
