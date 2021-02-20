@@ -26,6 +26,9 @@ class TreeBuilderFromArrayResult implements TreeBuilderInterface
     public function buildTree($list, $pathName, $parentPath = null, $parentName = null, $childrenName = null)
     {
         $nodeList = array();
+        if (is_array($parentPath)) {
+            $parentPath = implode('.', $parentPath);
+        }
         $pathFinder = static function (array $path, array &$nodeList, $value) use (&$pathFinder) {
             if (count($path) === 1) {
                 $nodeList[array_shift($path)] = $value;
@@ -48,7 +51,14 @@ class TreeBuilderFromArrayResult implements TreeBuilderInterface
         while (count($list) > 0) {
             $forUnset = array();
             foreach ($list as $key => $item) {
-                $path = array_diff($item[$pathName], $parentPath);
+                $path = is_array($item[$pathName])
+                    ? implode('.', $item[$pathName])
+                    : (string)$item[$pathName];
+                if (substr($path, 0, strlen($parentPath)) == $parentPath) {
+                    $path = substr($path, strlen($parentPath)+1);
+                }
+                $path = explode('.', $path);
+
                 if ($pathFinder($path, $nodeList, $item)) {
                     $forUnset[] = $key;
                 }

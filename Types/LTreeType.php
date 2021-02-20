@@ -38,10 +38,14 @@ class LTreeType extends Type
         }
 
         if (is_scalar($value)) {
-            $value = (string) $value;
+            return (string) $value;
         }
 
-        return explode('.', $value);
+        if (is_array($value)) {
+            return implode('.', $value);
+        }
+
+        throw new \InvalidArgumentException("Unssupported type '" . (gettype($value)) . "'");
     }
 
     /**
@@ -58,11 +62,15 @@ class LTreeType extends Type
             return null;
         }
 
-        if (is_scalar($value)) {
-            $value = (array) $value;
+        if (is_array($value)) {
+            return implode('.', $value);
         }
 
-        return implode('.', $value);
+        if (is_scalar($value)) {
+            return (string)$value;
+        }
+
+        throw new \InvalidArgumentException("Unssupported type '" . (gettype($value)) . "'");
     }
 
     /**
