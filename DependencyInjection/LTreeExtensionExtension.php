@@ -34,7 +34,7 @@ class LTreeExtensionExtension extends Extension implements PrependExtensionInter
         $dbalConfig = [
             'dbal' => [
                 'types' => [
-                    LTreeType::TYPE_NAME => LTreeType::class,
+                    LTreeType::TYPE_NAME => ['class' => LTreeType::class, 'commented' => false],
                 ],
                 'mapping_types' => [
                     LTreeType::TYPE_NAME => LTreeType::TYPE_NAME
